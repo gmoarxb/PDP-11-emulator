@@ -6,14 +6,17 @@ bool is_big_endian() {
     return (word)first_byte != two_bytes;
 }
 
-bool is_little_endian() {
-    return !is_big_endian();
-}
-
-word swap_endian(word value) {
+word change_endian(word value) {
     byte* first_byte_ptr = (byte*)&value;
     byte big_byte = *first_byte_ptr;
     *first_byte_ptr = *(first_byte_ptr + 1);
     *(first_byte_ptr + 1) = big_byte;
+    return value;
+}
+
+word get_right_endian_word(word value) {
+    if (is_big_endian()) {
+        value = change_endian(value);
+    }
     return value;
 }

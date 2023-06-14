@@ -29,6 +29,7 @@ word memory_read_word(Memory* memory, address source);
 void error(char* function_name, char* message);
 bool is_big_endian();
 bool is_little_endian();
-word swap_endian(word value);
+word change_endian(word value);
+word get_right_endian_word(word value);
 
 #endif  // PDP_11_EMULATOR_H_
