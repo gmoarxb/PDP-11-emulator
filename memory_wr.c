@@ -20,7 +20,7 @@ void memory_write_word(Memory* memory, address destination, word value) {
     } else if (destination & (word)0x0001) {
         error("memory_write_word", "Not even address for word!");
     }
-    memory->words[destination >> 0x0001] = value;
+    memory->words[destination >> 0x1] = value;
 }
 
 word memory_read_word(Memory* memory, address source) {
@@ -29,5 +29,5 @@ word memory_read_word(Memory* memory, address source) {
     } else if (source & (word)0x0001) {
         error("memory_write_word", "Not even address for word!");
     }
-    return memory->words[source >> 0x0001];
+    return memory->words[source >> 0x1];
 }
