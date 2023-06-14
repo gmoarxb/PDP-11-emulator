@@ -3,14 +3,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <arpa/inet.h>
 
 typedef uint8_t byte;  // byte is 8 bits
 typedef uint16_t word;  // word is 2 bytes
 typedef uint16_t address;  // represets 2^16 values
 
-#define MEMORY_SIZE_IN_BYTES (0x1 << 0x6 * 0x1 << 0xA)  // 64 kbytes
+#define MEMORY_SIZE_IN_BYTES (0x1 << 0x6 * 0x1 << 0xA)  // 2^64 * 2^10 = 64 kbytes
 
 typedef struct memory {
     union {
@@ -25,5 +27,6 @@ void memory_write_word(Memory* memory, address destination, word value);
 word memory_read_word(Memory* memory, address source);
 
 void error(char* function_name, char* message);
+bool is_big_endian();
 
 #endif  // PDP_11_EMULATOR_H_

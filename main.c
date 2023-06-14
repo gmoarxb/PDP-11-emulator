@@ -3,6 +3,8 @@
 #include "pdp.h"
 
 int main() {
-    memory_write_byte(NULL, 0, 0);
+    uint16_t var = 1;
+    printf("%"PRIu16" %"PRIu16"\n", var, htons(var));
+    printf("%d\n", is_big_endian());
     return EXIT_SUCCESS;
 }
