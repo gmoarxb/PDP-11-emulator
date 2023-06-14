@@ -2,9 +2,11 @@ CC=gcc
 CFLAGS=-Wall -Wextra -std=c11
 LFLAGS=`pkg-config --cflags --libs check`
 
+OBJFILES=memory_wr.o error.o endian.o
+
 all: memwr err endi
 	$(CC) $(CFLAGS) -c ./main.c
-	$(CC) $(CFLAGS) main.o memory_wr.o error.o endian.o -o ./pdp11.out
+	$(CC) $(CFLAGS) main.o $(OBJFILES) -o ./pdp11.out
 
 run: all
 	./pdp11.out
@@ -18,9 +20,9 @@ err:
 endi:
 	$(CC) $(CFLAGS) -c ./endian.c
 
-test: memwr err
+test: memwr err endi
 	$(CC) $(CFLAGS) -c ./test/test_main.c $(LFLAGS)
-	$(CC) $(CFLAGS) test_main.o memory_wr.o error.o -o ./pdp11_test.out $(LFLAGS)
+	$(CC) $(CFLAGS) test_main.o $(OBJFILES) -o ./pdp11_test.out $(LFLAGS)
 
 test_run: test
 	./pdp11_test.out
