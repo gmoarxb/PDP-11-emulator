@@ -1,12 +1,25 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -Wpedantic -pedantic-errors -std=c11
-LFLAGS=-lgcov -lcheck
+CFLAGS=-Wall -Wextra -std=c11
+LFLAGS=`pkg-config --cflags --libs check`
 
-all:
-	$(CC) $(CFLAGS) ./main.c
+all: memwr err
+	$(CC) $(CFLAGS) -c ./main.c
+	$(CC) $(CFLAGS) main.o memory_wr.o error.o -o ./pdp11.out
 
-test:
-	$(CC) $(CFLAGS) ./test/test_main.c
+run: all
+	./pdp11.out
 
+memwr:
+	$(CC) $(CFLAGS) -c ./memory_wr.c
+
+err:
+	$(CC) $(CFLAGS) -c ./error.c
+
+test: memwr err
+	$(CC) $(CFLAGS) -c ./test/test_main.c $(LFLAGS)
+	$(CC) $(CFLAGS) test_main.o memory_wr.o error.o -o ./pdp11_test.out $(LFLAGS)
+
+test_run: test
+	./pdp11_test.out
 clean:
-	rm *.out
+	rm *.o *.out

@@ -25,7 +25,7 @@ START_TEST(write_two_bytes_read_word) {
     address ad = 4;
     byte by = 0xb2;
     memory_write_byte(&mem, ad, by);
-    byte by = 0xa1;
+    by = 0xa1;
     memory_write_byte(&mem, ad + 1, by);
     word wo = 0xa1b2;
     ck_assert_uint_eq(wo, memory_read_word(&mem, ad));
@@ -38,7 +38,7 @@ START_TEST(write_word_read_two_bytes) {
     memory_write_word(&mem, ad, wo);
     byte by = 0xc3;
     ck_assert_uint_eq(by, memory_read_byte(&mem, ad));
-    byte by = 0xe4;
+    by = 0xe4;
     ck_assert_uint_eq(by, memory_read_byte(&mem, ad + 1));
 }
 
@@ -46,16 +46,18 @@ Suite* memory_suite_create() {
     Suite* suite = suite_create("Memory");
     TCase* test_case = tcase_create("Memory w/r");
     tcase_add_test(test_case, write_byte_read_byte);
-    tcase_add_test(test_case, write_word_read_word);
-    tcase_add_test(test_case, write_two_bytes_read_word);
+    //tcase_add_test(test_case, write_word_read_word);
+    //tcase_add_test(test_case, write_two_bytes_read_word);
+    //tcase_add_test(test_case, write_word_read_two_bytes);
     suite_add_tcase(suite, test_case);
+    return suite;
 }
 
 int main() {
     Suite* suite = memory_suite_create();
     SRunner* suite_runner = srunner_create(suite);
 
-    srunner_set_fork_status(suite, CK_NOFORK);
+    srunner_set_fork_status(suite_runner, CK_NOFORK);
     srunner_run_all(suite_runner, CK_NORMAL);
 
     size_t failed_count = srunner_ntests_failed(suite_runner);

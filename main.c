@@ -3,6 +3,6 @@
 #include "pdp.h"
 
 int main() {
-    byte memory[MEMORY_SIZE] = {0};
+    memory_write_byte(NULL, 0, 0);
     return EXIT_SUCCESS;
 }
