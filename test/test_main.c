@@ -36,9 +36,9 @@ START_TEST(write_word_read_two_bytes) {
     address ad = 6;
     word wo = 0xc3e4;
     memory_write_word(&mem, ad, wo);
-    byte by = 0xc3;
+    byte by = 0xe4;
     ck_assert_uint_eq(by, memory_read_byte(&mem, ad));
-    by = 0xe4;
+    by = 0xc3;
     ck_assert_uint_eq(by, memory_read_byte(&mem, ad + 1));
 }
 
@@ -46,9 +46,9 @@ Suite* memory_suite_create() {
     Suite* suite = suite_create("Memory");
     TCase* test_case = tcase_create("Memory w/r");
     tcase_add_test(test_case, write_byte_read_byte);
-    //tcase_add_test(test_case, write_word_read_word);
-    //tcase_add_test(test_case, write_two_bytes_read_word);
-    //tcase_add_test(test_case, write_word_read_two_bytes);
+    tcase_add_test(test_case, write_word_read_word);
+    tcase_add_test(test_case, write_two_bytes_read_word);
+    tcase_add_test(test_case, write_word_read_two_bytes);
     suite_add_tcase(suite, test_case);
     return suite;
 }
