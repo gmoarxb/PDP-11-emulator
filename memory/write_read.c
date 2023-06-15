@@ -27,7 +27,7 @@ word memory_read_word(Memory* memory, address source) {
     if (!memory) {
         error("memory_read_word", "Memory not initialized!");
     } else if (word_is_address_odd(source)) {
-        error("memory_write_word", "Not even address for word!");
+        error("memory_read_word", "Not even address for word!");
     }
     return word_make_right_endian(memory->words[source >> 0x1]);
 }

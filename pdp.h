@@ -18,6 +18,8 @@ typedef struct memory {
     };
 } Memory;
 
+void error(char* function_name, char* message);
+
 bool word_is_address_odd(address value);
 word word_make_right_endian(word value);
 bool word_is_endian_big();
@@ -27,10 +29,6 @@ void memory_write_byte(Memory* memory, address destination, byte value);
 byte memory_read_byte(Memory* memory, address source);
 void memory_write_word(Memory* memory, address destination, word value);
 word memory_read_word(Memory* memory, address source);
-
-void memory_load_data();
-
-void error(char* function_name, char* message);
 
 void memory_load_data(Memory* memory, const char* file_name);
 void memory_dump(Memory* memory, address block, uint16_t size);
