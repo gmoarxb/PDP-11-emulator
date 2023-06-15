@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "pdp.h"
+#include "../pdp.h"
 
 bool word_is_address_odd(address value) {
     return (bool)(value & (address)0x0001);

@@ -1,4 +1,4 @@
-#include "pdp.h"
+#include "../pdp.h"
 
 void memory_write_byte(Memory* memory, address destination, byte value) {
     if (!memory) {
