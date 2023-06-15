@@ -1,13 +1,9 @@
 #ifndef PDP_11_EMULATOR_H_
 #define PDP_11_EMULATOR_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include <ctype.h>
 
 typedef uint8_t byte;  // byte is 8 bits
 typedef uint16_t word;  // word is 2 bytes
@@ -27,7 +23,6 @@ word word_make_right_endian(word value);
 bool word_is_endian_big();
 word word_change_endian(word value);
 
-
 void memory_write_byte(Memory* memory, address destination, byte value);
 byte memory_read_byte(Memory* memory, address source);
 void memory_write_word(Memory* memory, address destination, word value);
@@ -38,6 +33,6 @@ void memory_load_data();
 void error(char* function_name, char* message);
 
 void memory_load_data(Memory* memory, const char* file_name);
-void memory_dump(Memory* memory, address block, size_t size);
+void memory_dump(Memory* memory, address block, uint16_t size);
 
 #endif  // PDP_11_EMULATOR_H_

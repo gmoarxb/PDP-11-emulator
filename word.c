@@ -1,7 +1,8 @@
+#include <stdbool.h>
 #include "pdp.h"
 
 bool word_is_address_odd(address value) {
-    return (value & (address)0x0001) == (address)0x0001;
+    return (bool)(value & (address)0x0001);
 }
 
 word word_make_right_endian(word value) {
@@ -18,9 +19,10 @@ bool word_is_endian_big() {
 }
 
 word word_change_endian(word value) {
-    byte* first_byte_ptr = (byte*)&value;
-    byte big_byte = *first_byte_ptr;
-    *first_byte_ptr = *(first_byte_ptr + 1);
-    *(first_byte_ptr + 1) = big_byte;
+    byte* first_p = (byte*)&value;
+    byte* second_p = first_p + 0x1;
+    byte temp = *first_p;
+    *first_p = *second_p;
+    *second_p = temp;
     return value;
 }

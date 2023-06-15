@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include "pdp.h"
 
 #define LINE_MAX_SIZE (0x1 << 0x4)  // 16
@@ -7,7 +12,7 @@ typedef struct block {
     char address_str[LINE_MAX_SIZE];
     char size_str[LINE_MAX_SIZE];
     address address_num;
-    size_t size_num;
+    uint16_t size_num;
 } Block;
 
 void memory_write_block(Memory* memory, FILE* data);
@@ -15,7 +20,7 @@ void block_process_info(Block* block);
 
 void memory_load_data(Memory* memory, const char* file_name) {
     FILE* data = fopen(file_name, "r");
-    if (data == NULL || ferror(data)) {
+    if (!data || ferror(data)) {
         error("memory_load_data", "Unable to open file!");
     }
     while (!feof(data)) {
@@ -33,7 +38,7 @@ void memory_write_block(Memory* memory, FILE* data) {
         error("memory_write_block", "ferror(data) is true!");
     }
     block_process_info(&block);
-    for (size_t i = 0; i < block.size_num; ++i) {
+    for (uint16_t i = 0; i < block.size_num; ++i) {
         char value_str[LINE_MAX_SIZE] = {0};
         fgets(value_str, LINE_MAX_SIZE, data);
         byte value = 0;
@@ -47,17 +52,17 @@ void block_process_info(Block* block) {
     if (strlen(block->address_str) != 4 || strlen(block->size_str) != 4) {
         error("block_process_info", "Wrong length of address or count!");
     }
-    for (size_t i = 0; i < 4; ++i) {
+    for (uint16_t i = 0; i < 4; ++i) {
         if (!isxdigit(block->address_str[i]) || !isxdigit(block->size_str[i])) {
             error("block_process_info", "Wrong format of address or count!");
         }
     }
     sscanf(block->address_str, "%"SCNx16, &block->address_num);
-    sscanf(block->size_str, "%zx", &block->size_num);
+    sscanf(block->size_str, "%"SCNx16, &block->size_num);
 }
 
-void memory_dump(Memory* memory, address block, size_t size) {
-    for (size_t i = 0; i + block < MEMORY_SIZE_IN_BYTES; i += 2) {
+void memory_dump(Memory* memory, address block, uint16_t size) {
+    for (uint16_t i = 0; i + block < MEMORY_SIZE_IN_BYTES; i += 2) {
         if (i == size * 2) {
             break;
         } else {
