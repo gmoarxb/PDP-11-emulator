@@ -34,20 +34,7 @@ bool is_big_endian();
 word change_endian(word value);
 word get_right_endian_word(word value);
 
-//////
-#define LINE_MAX_SIZE (0x1 << 0x4)  // 16
-
-typedef struct block {
-    char info[LINE_MAX_SIZE];
-    char address_str[LINE_MAX_SIZE];
-    char size_str[LINE_MAX_SIZE];
-    address address_num;
-    size_t size_num;
-} Block;
-
 void memory_load_data(Memory* memory, const char* file_name);
-void memory_write_block(Memory* memory, FILE* data);
-void block_process_info(Block* block);
 void memory_dump(Memory* memory, address block, size_t size);
 
 #endif  // PDP_11_EMULATOR_H_

@@ -1,5 +1,18 @@
 #include "pdp.h"
 
+#define LINE_MAX_SIZE (0x1 << 0x4)  // 16
+
+typedef struct block {
+    char info[LINE_MAX_SIZE];
+    char address_str[LINE_MAX_SIZE];
+    char size_str[LINE_MAX_SIZE];
+    address address_num;
+    size_t size_num;
+} Block;
+
+void memory_write_block(Memory* memory, FILE* data);
+void block_process_info(Block* block);
+
 void memory_load_data(Memory* memory, const char* file_name) {
     FILE* data = fopen(file_name, "r");
     if (data == NULL || ferror(data)) {
@@ -44,11 +57,11 @@ void block_process_info(Block* block) {
 }
 
 void memory_dump(Memory* memory, address block, size_t size) {
-    for (size_t i = 0; i < MEMORY_SIZE_IN_BYTES; i += 2) {
+    for (size_t i = 0; i + block < MEMORY_SIZE_IN_BYTES; i += 2) {
         if (i == size * 2) {
             break;
         } else {
-            word value = get_right_endian_word(memory->words[block + (address)i >> 0x1]);
+            word value = get_right_endian_word(memory->words[(block + (address)i) >> 0x1]);
             printf("%06"PRIo16": %06"PRIo16" %04"PRIx16"\n", block + (address)i, value, value);
         }
     }
