@@ -9,12 +9,12 @@ typedef uint8_t byte;  // byte is 8 bits
 typedef uint16_t word;  // word is 2 bytes
 typedef uint16_t address;  // represents 2^16 values
 
-#define MEMORY_SIZE_IN_BYTES (0x1 << 0x6 * 0x1 << 0xA)  // 2^64 * 2^10 = 64 kbytes
+#define MEMORY_SIZE_IN_BYTES (1 << 16)  // 64 kbytes = 64 * 1024 = 2^6 * 2^10
 
 typedef struct memory {
     union {
         byte bytes[MEMORY_SIZE_IN_BYTES];
-        word words[MEMORY_SIZE_IN_BYTES >> 0x1];
+        word words[MEMORY_SIZE_IN_BYTES >> 1];
     };
 } Memory;
 

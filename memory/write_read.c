@@ -20,7 +20,7 @@ void memory_write_word(Memory* memory, address destination, word value) {
     } else if (word_is_address_odd(destination)) {
         error("memory_write_word", "Not even address for word!");
     }
-    memory->words[destination >> 0x1] = word_make_right_endian(value);
+    memory->words[destination >> 1] = word_make_right_endian(value);
 }
 
 word memory_read_word(Memory* memory, address source) {
@@ -29,5 +29,5 @@ word memory_read_word(Memory* memory, address source) {
     } else if (word_is_address_odd(source)) {
         error("memory_read_word", "Not even address for word!");
     }
-    return word_make_right_endian(memory->words[source >> 0x1]);
+    return word_make_right_endian(memory->words[source >> 1]);
 }
