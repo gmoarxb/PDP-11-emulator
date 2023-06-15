@@ -22,6 +22,12 @@ typedef struct memory {
     };
 } Memory;
 
+bool word_is_address_odd(address value);
+word word_make_right_endian(word value);
+bool word_is_endian_big();
+word word_change_endian(word value);
+
+
 void memory_write_byte(Memory* memory, address destination, byte value);
 byte memory_read_byte(Memory* memory, address source);
 void memory_write_word(Memory* memory, address destination, word value);
@@ -30,9 +36,6 @@ word memory_read_word(Memory* memory, address source);
 void memory_load_data();
 
 void error(char* function_name, char* message);
-bool is_big_endian();
-word change_endian(word value);
-word get_right_endian_word(word value);
 
 void memory_load_data(Memory* memory, const char* file_name);
 void memory_dump(Memory* memory, address block, size_t size);

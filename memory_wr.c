@@ -17,17 +17,17 @@ byte memory_read_byte(Memory* memory, address source) {
 void memory_write_word(Memory* memory, address destination, word value) {
     if (memory == NULL) {
         error("memory_write_word", "Memory not initialized!");
-    } else if (destination & (word)0x0001) {
+    } else if (word_is_address_odd(destination)) {
         error("memory_write_word", "Not even address for word!");
     }
-    memory->words[destination >> 0x1] = get_right_endian_word(value);
+    memory->words[destination >> 0x1] = word_make_right_endian(value);
 }
 
 word memory_read_word(Memory* memory, address source) {
     if (memory == NULL) {
         error("memory_read_word", "Memory not initialized!");
-    } else if (source & (word)0x0001) {
+    } else if (word_is_address_odd(source)) {
         error("memory_write_word", "Not even address for word!");
     }
-    return get_right_endian_word(memory->words[source >> 0x1]);
+    return word_make_right_endian(memory->words[source >> 0x1]);
 }

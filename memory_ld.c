@@ -3,7 +3,7 @@
 #define LINE_MAX_SIZE (0x1 << 0x4)  // 16
 
 typedef struct block {
-    char info[LINE_MAX_SIZE];
+    char address_and_size[LINE_MAX_SIZE];
     char address_str[LINE_MAX_SIZE];
     char size_str[LINE_MAX_SIZE];
     address address_num;
@@ -28,7 +28,7 @@ void memory_load_data(Memory* memory, const char* file_name) {
 
 void memory_write_block(Memory* memory, FILE* data) {
     Block block = {0};
-    fgets(block.info, LINE_MAX_SIZE, data);
+    fgets(block.address_and_size, LINE_MAX_SIZE, data);
     if (ferror(data)) {
         error("memory_write_block", "ferror(data) is true!");
     }
@@ -43,7 +43,7 @@ void memory_write_block(Memory* memory, FILE* data) {
 }
 
 void block_process_info(Block* block) {
-    sscanf(block->info, "%s%s", block->address_str, block->size_str);
+    sscanf(block->address_and_size, "%s%s", block->address_str, block->size_str);
     if (strlen(block->address_str) != 4 || strlen(block->size_str) != 4) {
         error("block_process_info", "Wrong length of address or count!");
     }
@@ -61,7 +61,7 @@ void memory_dump(Memory* memory, address block, size_t size) {
         if (i == size * 2) {
             break;
         } else {
-            word value = get_right_endian_word(memory->words[(block + (address)i) >> 0x1]);
+            word value = word_make_right_endian(memory->words[(block + (address)i) >> 0x1]);
             printf("%06"PRIo16": %06"PRIo16" %04"PRIx16"\n", block + (address)i, value, value);
         }
     }
