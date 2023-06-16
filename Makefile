@@ -23,7 +23,7 @@ compile_memory:
 	$(CC) $(CFLAGS) -c ./memory/load_dump.c -o ./objfiles/load_dump.o
 
 compile_support:
-	$(CC) $(CFLAGS) -c ./support/error.c -o ./objfiles/error.o
+	$(CC) $(CFLAGS) -c ./support/logging.c -o ./objfiles/logging.o
 	$(CC) $(CFLAGS) -c ./support/word.c -o ./objfiles/word.o
 	
 clean:

@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc <= 1) {
-        error("main", "Need a path to data in command line!");
+        log_state(current_log_level, "main", "Need a path to data in command line!");
     }
     while (getopt(argc, argv, COMMAND_OPTIONS) != -1) {
     }

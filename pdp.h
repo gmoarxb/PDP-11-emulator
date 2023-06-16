@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <stdio.h>
 
 typedef uint8_t byte;  // byte is 8 bits
 typedef uint16_t word;  // word is 2 bytes
@@ -31,6 +32,20 @@ void memory_write_word(Memory* memory, address destination, word value);
 word memory_read_word(Memory* memory, address source);
 
 void memory_load_data(Memory* memory, const char* file_name);
+void memory_write_block(Memory* memory, address block, uint16_t size, FILE* data);
 void memory_dump(Memory* memory, address block, uint16_t size);
+
+typedef enum log_level {
+    LOG_WARNING, LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_ERROR
+} LogLevel;
+
+extern LogLevel current_log_level;
+
+void log_state(LogLevel log_level, const char* const function_name, const char* const message);
+void log_error(const char* const function_name, const char* const message);
+void log_info(const char* const message);
+void log_debug(const char* const message);
+void log_trace(const char* const message);
+void log_warning(const char* const message);
 
 #endif  // PDP_11_EMULATOR_H_

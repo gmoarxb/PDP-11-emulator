@@ -4,26 +4,24 @@
 #include <inttypes.h>
 #include "../pdp.h"
 
-void memory_write_block(Memory* memory, address block, uint16_t size, FILE* data);
-
 void memory_load_data(Memory* memory, const char* file_name) {
     FILE* data = fopen(file_name, "r");
     if (!data || ferror(data)) {
-        error("memory_load_data", "Unable to open file!");
+        log_state(current_log_level, "memory_load_data", "Unable to open file!");
     }
     if (feof(data)) {
-        error("memory_load_data", "Opened file is empty!");
+        log_state(current_log_level, "memory_load_data", "Opened file is empty!");
     }
     address block = 0;
     uint16_t size = 0;
     while (!feof(data)) {
         if (fscanf(data, "%4"SCNx16"%4"SCNx16, &block, &size) != 2) {
-            error("memory_write_block", "Wrong data file format!");
+            log_state(current_log_level, "memory_write_block", "Wrong data file format!");
         }
         memory_write_block(memory, block, size, data);
         char sym = fgetc(data);
         if (sym != '\n' && sym != EOF) {
-            error("memory_load_data", "Wrong data file format!");
+            log_state(current_log_level, "memory_load_data", "Wrong data file format!");
         }
         while (isspace(sym)) {
             sym = fgetc(data);
@@ -37,24 +35,24 @@ void memory_write_block(Memory* memory, address block, uint16_t size, FILE* data
     uint16_t i = 0;
     for (; i < size && (block + i) < MEMORY_SIZE_IN_BYTES; ++i) {
         if (fgetc(data) != '\n') {
-            error("memory_write_block", "Wrong data file format!");
+            log_state(current_log_level, "memory_write_block", "Wrong data file format!");
         }
         byte value = 0;
         if (fscanf(data, "%2"SCNx8, &value) != 1) {
-            error("memory_write_block", "Wrong data file format!");
+            log_state(current_log_level, "memory_write_block", "Wrong data file format!");
         }
         memory_write_byte(memory, block + i, value);
     }
     if (i != size) {
-        error("memory_write_block", "Writing block size is out of memory size!");
+        log_state(current_log_level, "memory_write_block", "Writing block size is out of memory size!");
     }
 }
 
 void memory_dump(Memory* memory, address block, uint16_t size) {
     if (word_is_address_odd(block)) {
-        error("memory_dump", "Block address is not even!");
+        log_state(current_log_level, "memory_dump", "Block address is not even!");
     } else if (word_is_address_odd(size)) {
-        error("memory_dump", "Block size is not even!");
+        log_state(current_log_level, "memory_dump", "Block size is not even!");
     }
     uint16_t i = 0;
     for (; i < size && (block + i) < MEMORY_SIZE_IN_BYTES; i += 2) {
@@ -62,6 +60,6 @@ void memory_dump(Memory* memory, address block, uint16_t size) {
         printf("%06"PRIo16": %06"PRIo16" %04"PRIx16"\n", block + i, value, value);
     }
     if (i != size) {
-        error("memory_dump", "Dump block size is out of memory size!");
+        log_state(current_log_level, "memory_dump", "Dump block size is out of memory size!");
     }
 }
