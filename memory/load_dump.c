@@ -1,24 +1,9 @@
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 #include <stdint.h>
 #include <inttypes.h>
 #include "../pdp.h"
 
-#define FOUR_HEX_SYMBOLS 4
-#define TWO_HEX_SYMBOLS 2
-
-typedef struct block_info {
-    // "00a2 a23b" and \0 so 4 * 2 + 2
-    char address_and_size[FOUR_HEX_SYMBOLS * 2 + 2]; 
-    char address_str[FOUR_HEX_SYMBOLS + 1];
-    char size_str[FOUR_HEX_SYMBOLS + 1];
-    address address_num;
-    uint16_t size_num;
-} BlockInfo;
-
 void memory_write_block(Memory* memory, FILE* data);
-void block_info_process(BlockInfo* block_info);
 
 void memory_load_data(Memory* memory, const char* file_name) {
     FILE* data = fopen(file_name, "r");
@@ -30,51 +15,32 @@ void memory_load_data(Memory* memory, const char* file_name) {
     }
     while (!feof(data)) {
         memory_write_block(memory, data);
+        char sym = fgetc(data);
+        if (sym != '\n' && sym != EOF) {
+            error("memory_load_data", "Wrong data file format!");
+        }
     }
 }
 
 void memory_write_block(Memory* memory, FILE* data) {
-    BlockInfo block_info = {0};
-    fgets(block_info.address_and_size,
-          sizeof(block_info.address_and_size), data);
-    fgetc(data);
-    block_info_process(&block_info);
-    for (uint16_t i = 0; i < block_info.size_num; ++i) {
-        if (feof(data)) {
-            error("memory_write_block", "Not enough data bytes!");
-        }
-        char value_str[TWO_HEX_SYMBOLS + 1] = {0};
-        fgets(value_str, sizeof(value_str), data);
-        fgetc(data);
-        if (strlen(value_str) != TWO_HEX_SYMBOLS) {
-            error("memory_write_block", "Wrong length of byte value!");
-        }
-        for (uint16_t i = 0; i < TWO_HEX_SYMBOLS; ++i) {
-            if (!isxdigit(value_str[i])) {
-                error("memory_write_block", "Wrong format of byte value!");
-            }
+    address block = 0x0000;
+    uint16_t size = 0;
+    int res = 0;
+    res = fscanf(data, "%4"SCNx16"%4"SCNx16, &block, &size);
+    if (res != 2) {
+        error("memory_write_block", "Wrong data file format!");
+    }
+    for (uint16_t i = 0; i < size; ++i) {
+        if (fgetc(data) != '\n') {
+            error("memory_write_block", "Wrong data file format!");
         }
         byte value = 0;
-        sscanf(value_str, "%"SCNx8, &value);
-        memory_write_byte(memory, block_info.address_num + i, value);
-    }
-}
-
-void block_info_process(BlockInfo* block_info) {
-    sscanf(block_info->address_and_size, "%s%s",
-           block_info->address_str, block_info->size_str);
-    if (strlen(block_info->address_str) != FOUR_HEX_SYMBOLS ||
-        strlen(block_info->size_str) != FOUR_HEX_SYMBOLS) {
-        error("block_process_info", "Wrong length of address or count value!");
-    }
-    for (uint16_t i = 0; i < FOUR_HEX_SYMBOLS; ++i) {
-        if (!isxdigit(block_info->address_str[i]) ||
-            !isxdigit(block_info->size_str[i])) {
-            error("block_process_info", "Wrong format of address or count value!");
+        res = fscanf(data, "%2"SCNx8, &value);
+        if (res != 1) {
+            error("memory_write_block", "Wrong data file format!");
         }
+        memory_write_byte(memory, block + i, value);
     }
-    sscanf(block_info->address_str, "%"SCNx16, &block_info->address_num);
-    sscanf(block_info->size_str, "%"SCNx16, &block_info->size_num);
 }
 
 void memory_dump(Memory* memory, address block, uint16_t size) {
