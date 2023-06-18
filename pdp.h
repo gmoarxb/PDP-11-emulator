@@ -12,12 +12,17 @@ typedef uint16_t address;  // represents 2^16 values
 
 #define MEMORY_SIZE_IN_BYTES (1 << 16)  // 64 kbytes = 64 * 1024 = 2^6 * 2^10
 
-typedef struct memory {
-    union {
+typedef union memory {
         byte bytes[MEMORY_SIZE_IN_BYTES];
         word words[MEMORY_SIZE_IN_BYTES >> 1];
-    };
 } Memory;
+
+typedef word registers[8];
+
+typedef struct pdp_11 {
+    Memory memory;
+    registers r;
+} Pdp11;
 
 void error(char* function_name, char* message);
 
