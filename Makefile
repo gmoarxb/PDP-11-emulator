@@ -18,13 +18,16 @@ test: compile_memory compile_support
 test_run: test
 	./pdp11_test.out
 
-compile_memory:
+compile_memory: objfiles_dir
 	$(CC) $(CFLAGS) -c ./memory/write_read.c -o ./objfiles/write_read.o
 	$(CC) $(CFLAGS) -c ./memory/load_dump.c -o ./objfiles/load_dump.o
 
-compile_support:
+compile_support: objfiles_dir
 	$(CC) $(CFLAGS) -c ./support/logging.c -o ./objfiles/logging.o
 	$(CC) $(CFLAGS) -c ./support/word.c -o ./objfiles/word.o
+
+objfiles_dir:
+	if [ ! -d ./objfiles ]; then mkdir objfiles; fi
 	
 clean:
-	rm *.o *.out ./objfiles/*
+	rm -rf ./*.o ./*.out ./objfiles
