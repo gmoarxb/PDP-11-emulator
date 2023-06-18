@@ -7,6 +7,18 @@ void do_halt() {
     exit(EXIT_SUCCESS);
 }
 
+void do_add() {
+    puts("THE add!!!");
+}
+
+void do_mov() {
+    puts("THE mOv!!!");
+}
+
+void do_unknown() {
+
+}
+
 int main(int argc, char* argv[]) {
     char* data_path = argv[argc - 1];
     Pdp11 pdp_11 = {0};
@@ -18,6 +30,12 @@ int main(int argc, char* argv[]) {
         pdp_11.r[7] += 2;
         if (w == 0) {
             do_halt();
+        } else if ((w & 0170000) == 0060000) {
+            do_add();
+        } else if ((w & 0070000) == 0010000) {
+            do_mov();
+        } else {
+            puts("unknown");
         }
     }
     return EXIT_SUCCESS;
