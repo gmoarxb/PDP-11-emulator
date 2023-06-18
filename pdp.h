@@ -46,11 +46,7 @@ typedef enum log_level {
 
 extern LogLevel current_log_level;
 
-void log_state(LogLevel log_level, const char* const function_name, const char* const message);
-void log_error(const char* const function_name, const char* const message);
-void log_info(const char* const message);
-void log_debug(const char* const message);
-void log_trace(const char* const message);
-void log_warning(const char* const message);
+void log_state(LogLevel log_level, const char* const message, ...);
+void log_level_print(LogLevel log_level);
 
 #endif  // PDP_11_EMULATOR_H_

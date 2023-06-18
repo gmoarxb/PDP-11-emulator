@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include "../pdp.h"
 
 #define BOLD "\033[1m"
@@ -9,43 +10,39 @@
 
 LogLevel current_log_level = LOG_ERROR;
 
-void log_state(LogLevel log_level, const char* const function_name, const char* const message) {
-    if (log_level < current_log_level) return;
-    switch (current_log_level) {
-        case LOG_WARNING: log_warning(message);
-        break;
-        case LOG_TRACE: log_trace(message);
-        break;
-        case LOG_DEBUG: log_debug(message);
-        break;
-        case LOG_INFO: log_info(message);
-        break;
-        case LOG_ERROR: log_error(function_name, message);
-        break;
+void log_state(LogLevel log_level, const char* const message, ...) {
+    if (log_level < current_log_level) {
+        return;
+    }
+    log_level_print(log_level);
+
+    va_list args;
+    va_start(args, message);
+    vprintf(message, args);
+    va_end(args);
+
+    printf("%s", "\n");
+    if (log_level == LOG_ERROR) {
+        exit(EXIT_FAILURE);
     }
 }
 
-void log_error(const char* const function_name, const char* const message) {
-    fprintf(stderr, BOLD RED "ERROR" RESET
-                    " in function "
-                    BOLD GREEN "%s" RESET
-                    ": %s\n",
-                    function_name, message);
-    exit(EXIT_FAILURE);
-}
-
-void log_info(const char* const message) {
-    puts(message);
-}
-
-void log_debug(const char* const message) {
-    puts(message);
-}
-
-void log_trace(const char* const message) {
-    puts(message);
-}
-
-void log_warning(const char* const message) {
-    puts(message);
+void log_level_print(LogLevel log_level) {
+    switch (log_level) {
+        case LOG_ERROR:
+            printf(BOLD RED "ERROR: " RESET);
+            break;
+        case LOG_INFO:
+            printf(BOLD RED "INFO: " RESET);
+            break;
+        case LOG_DEBUG:
+            printf(BOLD RED "DEBUG: " RESET);
+            break;
+        case LOG_TRACE:
+            printf(BOLD RED "TRACE: " RESET);
+            break;
+        case LOG_WARNING:
+            printf(BOLD RED "WARNING: " RESET);
+            break;
+    }
 }
