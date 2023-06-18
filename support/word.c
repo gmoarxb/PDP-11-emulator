@@ -13,16 +13,17 @@ word word_make_right_endian(word value) {
 }
 
 bool word_is_endian_big() {
-    static const word two_bytes = 0x0001;
-    const byte first_byte = *((byte*)&two_bytes);
-    return (word)first_byte != two_bytes;
+    static bool result = false;
+    static bool checked = false;
+    if (!checked) {
+        const word two_bytes = 0x0001;
+        const byte first_byte = *((byte*)&two_bytes);
+        result = (bool)((word)first_byte != two_bytes);
+        checked = true;
+    }
+    return result;
 }
 
 word word_change_endian(word value) {
-    byte* first_p = (byte*)&value;
-    byte* second_p = first_p + 1;
-    byte temp = *first_p;
-    *first_p = *second_p;
-    *second_p = temp;
-    return value;
+    return (value >> 8) | (value << 8);
 }

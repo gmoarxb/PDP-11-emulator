@@ -9,9 +9,6 @@ void memory_load_data(Memory* memory, const char* file_name) {
     if (!data || ferror(data)) {
         log_state(current_log_level, "memory_load_data", "Unable to open file!");
     }
-    if (feof(data)) {
-        log_state(current_log_level, "memory_load_data", "Opened file is empty!");
-    }
     address block = 0;
     uint16_t size = 0;
     while (!feof(data)) {

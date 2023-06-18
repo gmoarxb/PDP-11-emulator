@@ -15,5 +15,7 @@ int main(int argc, char* argv[]) {
     memory_load_data(&mem, data_path);
     memory_dump(&mem, 0x0200, 0x000c);
     memory_dump(&mem, 0x0040, 0x000c);
+    word wrd = 1;
+    printf("%"PRIu16" %"PRIu16"\n", wrd, word_change_endian(wrd));
     return EXIT_SUCCESS;
 }
