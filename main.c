@@ -23,11 +23,12 @@ int main(int argc, char* argv[]) {
     char* data_path = argv[argc - 1];
     Pdp11 pdp_11 = {0};
     memory_load_data(&pdp_11.memory, data_path);
-    pdp_11.r[7] = 01000;
+    pdp_11.R[7] = 01000;
+    printf("PC: %"PRIu16"\n", pdp_11.PC);
     while (1) {
-        word w = memory_read_word(&pdp_11.memory, pdp_11.r[7]);
-        printf("%06"PRIo16" %06"PRIo16"\n", pdp_11.r[7], w);
-        pdp_11.r[7] += 2;
+        word w = memory_read_word(&pdp_11.memory, pdp_11.PC);
+        printf("%06"PRIo16" %06"PRIo16"\n", pdp_11.PC, w);
+        pdp_11.PC += 2;
         if (w == 0) {
             do_halt();
         } else if ((w & 0170000) == 0060000) {

@@ -21,7 +21,13 @@ typedef word registers[8];
 
 typedef struct pdp_11 {
     Memory memory;
-    registers r;
+    union {
+        registers R;
+        struct {
+            word fill[7];
+            word PC;
+        };
+    };
 } Pdp11;
 
 void error(char* function_name, char* message);

@@ -23,7 +23,9 @@ void memory_load_data(Memory* memory, const char* file_name) {
         while (isspace(sym)) {
             sym = fgetc(data);
         }
-        ungetc(sym, data);
+        if (sym != EOF) {
+            ungetc(sym, data);
+        }
     }
     fclose(data);
 }
